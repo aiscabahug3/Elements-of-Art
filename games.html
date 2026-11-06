@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games - Guess the Element!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1b2a6b;
+    --pink: #ff5fa8;
+    --pink-soft: #ffd3e6;
+    --yellow: #ffe28a;
+    --yellow-soft: #fff1b8;
+    --purple: #8f5fe0;
+    --purple-soft: #e1d2fa;
+    --green: #3fc15a;
+    --green-soft: #d4f4c4;
+    --orange: #ff9a3c;
+    --orange-soft: #ffd9ae;
+    --blue: #4fa8e8;
+    --blue-soft: #cfe8fb;
+    --ink: #2b2b3a;
+    --font-body: "Fredoka", "Trebuchet MS", sans-serif;
+    --font-display: "Baloo 2", "Fredoka", "Trebuchet MS", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 10% 8%, #ffd9ef 0, transparent 38%),
+      radial-gradient(circle at 92% 12%, #ffc9e4 0, transparent 34%),
+      radial-gradient(circle at 20% 40%, #cfe3ff 0, transparent 40%),
+      radial-gradient(circle at 85% 48%, #e4d6ff 0, transparent 40%),
+      radial-gradient(circle at 15% 78%, #d6f1ff 0, transparent 38%),
+      radial-gradient(circle at 90% 85%, #ffe3f1 0, transparent 38%),
+      #f6eefc;
+    min-height: 100vh;
+  }
+
+  img { max-width: 100%; display: block; }
+
+  .poster {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 28px 22px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 26px;
+    background: #fff;
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    text-decoration: none;
+    border-radius: 999px;
+    border: 3px solid #fff;
+    box-shadow: 0 5px 0 rgba(143, 95, 224, 0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom: 18px;
+  }
+  .back-link:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(143, 95, 224, 0.2); }
+  .back-link:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(143, 95, 224, 0.2); }
+  .back-link:focus-visible { outline: 4px solid var(--navy); outline-offset: 3px; }
+
+  .page-title {
+    margin: 0 0 4px 6px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 3.8rem);
+    line-height: 1;
+    color: var(--navy);
+    -webkit-text-stroke: 8px #fff;
+    paint-order: stroke fill;
+    filter: drop-shadow(0 4px 0 rgba(143, 95, 224, 0.25));
+    transform: rotate(-2deg);
+    transform-origin: left center;
+  }
+  .page-title .accent { color: var(--orange); }
+
+  .page-sub {
+    margin: 0 0 26px 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+    color: var(--purple);
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
+  }
+
+  .ribbon-wrap { text-align: center; margin: 26px 0 22px; }
+  .ribbon {
+    display: inline-block;
+    position: relative;
+    padding: 10px 56px 12px;
+    background: linear-gradient(#ffb75e, #ff9a3c);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
+    letter-spacing: 0.01em;
+    text-shadow: 0 3px 0 rgba(160, 80, 0, 0.35);
+    border-radius: 14px;
+    box-shadow: 0 6px 0 #d9791f;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    width: 40px;
+    height: 100%;
+    background: #ffb75e;
+    z-index: -1;
+    border-radius: 8px;
+  }
+  .ribbon::before { left: -26px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 28% 50%); }
+  .ribbon::after  { right: -26px; clip-path: polygon(0 0, 100% 0, 72% 50%, 100% 100%, 0 100%); }
+
+  .card {
+    background: #fff;
+    border-radius: 28px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+  }
+  .card h3 {
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+    color: var(--navy);
+  }
+  .card p, .card li {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .card p { margin: 0 0 10px; }
+  .card ol { margin: 0 0 6px; padding-left: 24px; }
+  .card li { margin-bottom: 6px; }
+
+  /* Quiz game */
+  .quiz-panel {
+    background: #fff;
+    border-radius: 30px;
+    padding: 30px 32px 26px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+    margin-bottom: 22px;
+  }
+  .q-counter {
+    display: inline-block;
+    padding: 5px 20px;
+    border-radius: 999px;
+    background: var(--orange-soft);
+    color: #a85a10;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    margin-bottom: 14px;
+  }
+  .q-text {
+    margin: 0 0 18px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 3vw, 1.6rem);
+    line-height: 1.25;
+    color: var(--navy);
+  }
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .choice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: #faf6ff;
+    border: 3px solid var(--purple-soft);
+    border-radius: 18px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+  }
+  .choice:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--purple); background: #f3ebff; }
+  .choice:focus-visible { outline: 4px solid var(--navy); outline-offset: 2px; }
+  .choice:disabled { cursor: default; }
+  .choice .letter {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--purple-soft);
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .choice.correct { border-color: var(--green); background: var(--green-soft); }
+  .choice.correct .letter { background: var(--green); color: #fff; }
+  .choice.wrong { border-color: #f0506e; background: #ffe0e6; }
+  .choice.wrong .letter { background: #f0506e; color: #fff; }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-weight: 500;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    line-height: 1.4;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.good { background: var(--green-soft); color: #1c6b2c; }
+  .feedback.bad  { background: #ffe0e6; color: #a01c36; }
+
+  .next-row { margin-top: 18px; text-align: right; display: none; }
+  .next-row.show { display: block; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 32px;
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.3vw, 1.25rem);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(0,0,0,0.2); }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+  .btn:focus-visible { outline: 4px solid var(--navy); outline-offset: 3px; }
+  .btn-orange { background: #ff9a3c; }
+  .btn-pink   { background: #ff6db3; }
+  .btn-purple { background: #9a68e6; }
+  .btn-green  { background: #3fc15a; }
+
+  /* Result screen */
+  .result-panel {
+    background: #fff;
+    border-radius: 30px;
+    padding: 34px 32px 30px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+    text-align: center;
+    display: none;
+    margin-bottom: 22px;
+  }
+  .result-panel.show { display: block; }
+  .result-score {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 5rem);
+    line-height: 1;
+    color: var(--orange);
+    margin-bottom: 4px;
+  }
+  .result-score small { font-size: 0.4em; color: var(--ink); font-weight: 600; }
+  .result-msg {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    color: var(--navy);
+    margin-bottom: 18px;
+    line-height: 1.3;
+  }
+  .result-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .ground {
+    height: 34px;
+    margin: 40px -22px 0;
+    background: linear-gradient(#b787f0, #8f5fe0);
+    border-radius: 60% 60% 0 0 / 100% 100% 0 0;
+  }
+
+  @media (max-width: 600px) {
+    .card, .quiz-panel, .result-panel { padding: 20px 18px; }
+    .choices { grid-template-columns: 1fr; }
+    .ribbon { padding: 8px 34px 10px; }
+    .next-row { text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .back-link, .btn, .choice { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="poster">
+
+  <a class="back-link" href="index.html">&larr; Back to Home</a>
+
+  <h1 class="page-title">Art Challenge &mdash; <span class="accent">Guess the Element!</span></h1>
+  <p class="page-sub">Read the clues and pick the right element</p>
+
+  <div class="ribbon-wrap"><h2 class="ribbon" style="margin:0">Games</h2></div>
+
+  <!-- Introduction & Instructions -->
+  <section class="card">
+    <h3>Welcome to Guess the Element!</h3>
+    <p>In this fun game, you will identify the elements of art by reading clues about objects and pictures. Choose the best answer and see how much you know about art. Are you ready to become an Art Explorer?</p>
+    <h4 style="margin:18px 0 8px;font-family:var(--font-display);font-weight:700;font-size:clamp(1.1rem,2.8vw,1.5rem);color:var(--purple);">Instructions</h4>
+    <ol>
+      <li>Read each question and clue carefully.</li>
+      <li>Choose the correct element from the four choices.</li>
+      <li>Each correct answer earns one point.</li>
+      <li>Read the feedback after answering.</li>
+      <li>Complete all five questions to see your score.</li>
+    </ol>
+  </section>
+
+  <!-- Game area -->
+  <div id="gameArea">
+    <div class="quiz-panel" id="quizPanel">
+      <div class="q-counter" id="qCounter">Question 1 of 5</div>
+      <p class="q-text" id="qText"></p>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="next-row" id="nextRow">
+        <button class="btn btn-orange" id="nextBtn" type="button">Next Question &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result screen -->
+  <div class="result-panel" id="resultPanel">
+    <div class="result-score" id="resultScore">0 <small>/ 5</small></div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="result-btns">
+      <button class="btn btn-orange" id="playAgainBtn" type="button">Play Again</button>
+      <a class="btn btn-pink" href="index.html">Back to Home</a>
+    </div>
+  </div>
+
+  <div class="ground" aria-hidden="true"></div>
+</main>
+
+<script>
+  var questions = [
+    {
+      text: "A long mark drawn across a paper is an example of which element?",
+      choices: ["Color", "Line", "Texture", "Space"],
+      correct: 1,
+      feedback: "A line is a mark that connects two points."
+    },
+    {
+      text: "A square, circle, and triangle are examples of which element?",
+      choices: ["Shape", "Value", "Form", "Texture"],
+      correct: 0,
+      feedback: "Shapes are flat, two-dimensional areas."
+    },
+    {
+      text: "Which element makes a ball look solid and three-dimensional?",
+      choices: ["Line", "Space", "Form", "Color"],
+      correct: 2,
+      feedback: "Form has height, width, and depth."
+    },
+    {
+      text: "Which element refers to how light or dark something is?",
+      choices: ["Texture", "Value", "Shape", "Space"],
+      correct: 1,
+      feedback: "Value describes the lightness or darkness of a color."
+    },
+    {
+      text: "Which element describes how a surface feels or looks like it feels?",
+      choices: ["Texture", "Line", "Form", "Color"],
+      correct: 0,
+      feedback: "Texture describes the surface quality of an object."
+    }
+  ];
+
+  var letters = ["A", "B", "C", "D"];
+  var current = 0;
+  var score = 0;
+  var answered = false;
+
+  var qCounter = document.getElementById("qCounter");
+  var qText = document.getElementById("qText");
+  var choicesEl = document.getElementById("choices");
+  var feedback = document.getElementById("feedback");
+  var nextRow = document.getElementById("nextRow");
+  var nextBtn = document.getElementById("nextBtn");
+  var quizPanel = document.getElementById("quizPanel");
+  var resultPanel = document.getElementById("resultPanel");
+  var resultScore = document.getElementById("resultScore");
+  var resultMsg = document.getElementById("resultMsg");
+  var playAgainBtn = document.getElementById("playAgainBtn");
+
+  function renderQuestion() {
+    answered = false;
+    var q = questions[current];
+    qCounter.textContent = "Question " + (current + 1) + " of " + questions.length;
+    qText.textContent = q.text;
+    choicesEl.innerHTML = "";
+    feedback.className = "feedback";
+    feedback.textContent = "";
+    nextRow.classList.remove("show");
+    nextBtn.textContent = (current === questions.length - 1) ? "See My Score &rarr;" : "Next Question \u2192";
+
+    q.choices.forEach(function (label, i) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice";
+      btn.setAttribute("data-index", i);
+      btn.innerHTML = '<span class="letter">' + letters[i] + '</span><span>' + label + '</span>';
+      btn.addEventListener("click", function () { selectAnswer(i); });
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(index) {
+    if (answered) return;
+    answered = true;
+    var q = questions[current];
+    var buttons = choicesEl.querySelectorAll(".choice");
+
+    buttons.forEach(function (btn) {
+      btn.disabled = true;
+      var i = parseInt(btn.getAttribute("data-index"), 10);
+      if (i === q.correct) btn.classList.add("correct");
+      if (i === index && index !== q.correct) btn.classList.add("wrong");
+    });
+
+    if (index === q.correct) {
+      score++;
+      feedback.className = "feedback good show";
+      feedback.textContent = "Correct! " + q.feedback;
+    } else {
+      feedback.className = "feedback bad show";
+      feedback.textContent = "Not quite. The correct answer is " + letters[q.correct] + ". " + q.feedback;
+    }
+
+    nextRow.classList.add("show");
+  }
+
+  nextBtn.addEventListener("click", function () {
+    if (current < questions.length - 1) {
+      current++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+
+  function showResults() {
+    quizPanel.style.display = "none";
+    resultPanel.classList.add("show");
+    resultScore.innerHTML = score + ' <small>/ ' + questions.length + '</small>';
+
+    var msg;
+    if (score === 5) {
+      msg = "Excellent! You are an Art Explorer!";
+    } else if (score >= 3) {
+      msg = "Great job! Keep learning about the elements of art!";
+    } else {
+      msg = "Good try! Review the lesson and play again.";
+    }
+    resultMsg.textContent = msg;
+  }
+
+  playAgainBtn.addEventListener("click", function () {
+    current = 0;
+    score = 0;
+    resultPanel.classList.remove("show");
+    quizPanel.style.display = "block";
+    renderQuestion();
+  });
+
+  renderQuestion();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz - Elements of Art Knowledge Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1b2a6b;
+    --pink: #ff5fa8;
+    --pink-soft: #ffd3e6;
+    --yellow: #ffe28a;
+    --yellow-soft: #fff1b8;
+    --purple: #8f5fe0;
+    --purple-soft: #e1d2fa;
+    --green: #3fc15a;
+    --green-soft: #d4f4c4;
+    --orange: #ff9a3c;
+    --orange-soft: #ffd9ae;
+    --blue: #4fa8e8;
+    --blue-soft: #cfe8fb;
+    --ink: #2b2b3a;
+    --font-body: "Fredoka", "Trebuchet MS", sans-serif;
+    --font-display: "Baloo 2", "Fredoka", "Trebuchet MS", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 10% 8%, #ffd9ef 0, transparent 38%),
+      radial-gradient(circle at 92% 12%, #ffc9e4 0, transparent 34%),
+      radial-gradient(circle at 20% 40%, #cfe3ff 0, transparent 40%),
+      radial-gradient(circle at 85% 48%, #e4d6ff 0, transparent 40%),
+      radial-gradient(circle at 15% 78%, #d6f1ff 0, transparent 38%),
+      radial-gradient(circle at 90% 85%, #ffe3f1 0, transparent 38%),
+      #f6eefc;
+    min-height: 100vh;
+  }
+
+  img { max-width: 100%; display: block; }
+
+  .poster {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 28px 22px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 26px;
+    background: #fff;
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    text-decoration: none;
+    border-radius: 999px;
+    border: 3px solid #fff;
+    box-shadow: 0 5px 0 rgba(143, 95, 224, 0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom: 18px;
+  }
+  .back-link:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(143, 95, 224, 0.2); }
+  .back-link:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(143, 95, 224, 0.2); }
+  .back-link:focus-visible { outline: 4px solid var(--navy); outline-offset: 3px; }
+
+  .page-title {
+    margin: 0 0 4px 6px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 3.8rem);
+    line-height: 1;
+    color: var(--navy);
+    -webkit-text-stroke: 8px #fff;
+    paint-order: stroke fill;
+    filter: drop-shadow(0 4px 0 rgba(143, 95, 224, 0.25));
+    transform: rotate(-2deg);
+    transform-origin: left center;
+  }
+  .page-title .accent { color: var(--purple); }
+
+  .page-sub {
+    margin: 0 0 26px 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+    color: var(--purple);
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
+  }
+
+  .ribbon-wrap { text-align: center; margin: 26px 0 22px; }
+  .ribbon {
+    display: inline-block;
+    position: relative;
+    padding: 10px 56px 12px;
+    background: linear-gradient(#b48cf5, #8f5fe0);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
+    letter-spacing: 0.01em;
+    text-shadow: 0 3px 0 rgba(70, 20, 140, 0.35);
+    border-radius: 14px;
+    box-shadow: 0 6px 0 #6f3fcc;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    width: 40px;
+    height: 100%;
+    background: #b48cf5;
+    z-index: -1;
+    border-radius: 8px;
+  }
+  .ribbon::before { left: -26px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 28% 50%); }
+  .ribbon::after  { right: -26px; clip-path: polygon(0 0, 100% 0, 72% 50%, 100% 100%, 0 100%); }
+
+  .card {
+    background: #fff;
+    border-radius: 28px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+  }
+  .card h3 {
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+    color: var(--navy);
+  }
+  .card p, .card li {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .card p { margin: 0 0 10px; }
+  .card ol { margin: 0 0 6px; padding-left: 24px; }
+  .card li { margin-bottom: 6px; }
+
+  /* Quiz form */
+  .quiz-section {
+    background: #fff;
+    border-radius: 30px;
+    padding: 30px 32px 26px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+    margin-bottom: 22px;
+  }
+  .question-block {
+    padding: 18px 0;
+    border-bottom: 2px dashed var(--purple-soft);
+  }
+  .question-block:last-of-type { border-bottom: none; }
+  .question-block h4 {
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+    color: var(--navy);
+    line-height: 1.3;
+  }
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 14px;
+  }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 14px;
+    background: #faf6ff;
+    border: 2px solid var(--purple-soft);
+    border-radius: 14px;
+    font-size: clamp(0.9rem, 1.9vw, 1.02rem);
+    font-weight: 500;
+    line-height: 1.35;
+    cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+    text-align: left;
+  }
+  .option:hover { border-color: var(--purple); background: #f3ebff; }
+  .option input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .option .radio-mark {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 3px solid var(--purple-soft);
+    background: #fff;
+    margin-top: 1px;
+    position: relative;
+  }
+  .option.selected .radio-mark { border-color: var(--purple); background: var(--purple); }
+  .option.selected .radio-mark::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .option.selected { border-color: var(--purple); background: #f3ebff; }
+  .option.correct-answer { border-color: var(--green); background: var(--green-soft); }
+  .option.wrong-answer { border-color: #f0506e; background: #ffe0e6; }
+
+  .quiz-actions { margin-top: 22px; text-align: center; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 32px;
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.3vw, 1.25rem);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(0,0,0,0.2); }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+  .btn:focus-visible { outline: 4px solid var(--navy); outline-offset: 3px; }
+  .btn-purple { background: #9a68e6; }
+  .btn-pink   { background: #ff6db3; }
+  .btn-green  { background: #3fc15a; }
+
+  /* Results */
+  .results-panel {
+    background: #fff;
+    border-radius: 30px;
+    padding: 30px 32px 26px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+    margin-bottom: 22px;
+    display: none;
+  }
+  .results-panel.show { display: block; }
+  .score-big {
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 5rem);
+    line-height: 1;
+    color: var(--purple);
+    margin-bottom: 4px;
+  }
+  .score-big small { font-size: 0.4em; color: var(--ink); font-weight: 600; }
+  .score-stats {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    flex-wrap: wrap;
+    margin: 14px 0 18px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.3vw, 1.3rem);
+  }
+  .stat-correct { color: #1c6b2c; }
+  .stat-wrong { color: #a01c36; }
+
+  .results-message {
+    padding: 16px 22px;
+    border-radius: 18px;
+    background: var(--yellow-soft);
+    font-weight: 500;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    line-height: 1.45;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .wrong-list {
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+  }
+  .wrong-list li {
+    background: #fff5f7;
+    border-left: 5px solid #f0506e;
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    font-size: clamp(0.9rem, 1.9vw, 1.02rem);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .wrong-list .explain { display: block; margin-top: 4px; color: #6b3fc0; font-weight: 500; }
+
+  .results-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .ground {
+    height: 34px;
+    margin: 40px -22px 0;
+    background: linear-gradient(#b787f0, #8f5fe0);
+    border-radius: 60% 60% 0 0 / 100% 100% 0 0;
+  }
+
+  @media (max-width: 640px) {
+    .card, .quiz-section, .results-panel { padding: 20px 18px; }
+    .options { grid-template-columns: 1fr; }
+    .ribbon { padding: 8px 34px 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .back-link, .btn, .option { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="poster">
+
+  <a class="back-link" href="index.html">&larr; Back to Home</a>
+
+  <h1 class="page-title">Test Your Knowledge of the <span class="accent">Elements of Art!</span></h1>
+  <p class="page-sub">A ten-question quiz to check what you have learned</p>
+
+  <div class="ribbon-wrap"><h2 class="ribbon" style="margin:0">Quiz</h2></div>
+
+  <!-- Introduction & Instructions -->
+  <section class="card">
+    <h3>Let's see how much you have learned!</h3>
+    <p>This quiz will test your understanding of line, shape, form, color, value, texture, and space. Read each question carefully and choose the best answer.</p>
+    <h4 style="margin:18px 0 8px;font-family:var(--font-display);font-weight:700;font-size:clamp(1.1rem,2.8vw,1.5rem);color:var(--purple);">Instructions</h4>
+    <ol>
+      <li>Read each question carefully.</li>
+      <li>Choose only one correct answer.</li>
+      <li>Each correct answer is worth one point.</li>
+      <li>Answer all ten questions.</li>
+      <li>Check your score after completing the quiz.</li>
+    </ol>
+  </section>
+
+  <!-- Quiz form -->
+  <section class="quiz-section" id="quizSection">
+    <form id="quizForm" novalidate>
+      <!-- Questions injected by JS -->
+    </form>
+    <div class="quiz-actions">
+      <button class="btn btn-purple" type="button" id="submitBtn">Submit Answers</button>
+      <button class="btn btn-pink" type="button" id="resetBtn">Try Again</button>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="results-panel" id="resultsPanel">
+    <div class="score-big" id="scoreBig">0 <small>/ 10</small></div>
+    <div class="score-stats">
+      <span class="stat-correct" id="statCorrect">Correct: 0</span>
+      <span class="stat-wrong" id="statWrong">Incorrect: 0</span>
+    </div>
+    <div class="results-message" id="resultsMessage"></div>
+    <ul class="wrong-list" id="wrongList"></ul>
+    <div class="results-btns">
+      <button class="btn btn-purple" type="button" id="retryBtn">Try Again</button>
+      <a class="btn btn-pink" href="index.html">Back to Home</a>
+    </div>
+  </section>
+
+  <div class="ground" aria-hidden="true"></div>
+</main>
+
+<script>
+  var quizData = [
+    {
+      q: "What are the elements of art?",
+      options: [
+        "Tools used only for painting",
+        "Basic parts artists use to create artworks",
+        "Names of famous artists",
+        "Rules for writing stories"
+      ],
+      correct: 1,
+      explanation: "The elements of art are the basic building blocks artists use to create artworks."
+    },
+    {
+      q: "Which element is a mark that connects two points?",
+      options: ["Line", "Form", "Color", "Space"],
+      correct: 0,
+      explanation: "A line is a mark that connects two points. It can be straight, curved, thick, or thin."
+    },
+    {
+      q: "Which of the following is a geometric shape?",
+      options: ["Cloud", "Leaf", "Circle", "Splash"],
+      correct: 2,
+      explanation: "A circle is a geometric shape. Clouds, leaves, and splashes are organic shapes."
+    },
+    {
+      q: "Which element has height, width, and depth?",
+      options: ["Shape", "Form", "Line", "Value"],
+      correct: 1,
+      explanation: "Form is three-dimensional, having height, width, and depth."
+    },
+    {
+      q: "What element refers to what we see when light reflects from an object?",
+      options: ["Texture", "Space", "Color", "Form"],
+      correct: 2,
+      explanation: "Color is what we see when light reflects from an object."
+    },
+    {
+      q: "Which element refers to the lightness or darkness of a color?",
+      options: ["Value", "Line", "Shape", "Texture"],
+      correct: 0,
+      explanation: "Value describes the lightness or darkness of a color."
+    },
+    {
+      q: "What element describes how a surface feels or looks like it feels?",
+      options: ["Space", "Texture", "Form", "Color"],
+      correct: 1,
+      explanation: "Texture describes how a surface feels or looks like it would feel."
+    },
+    {
+      q: "What element refers to the area around, between, or inside objects?",
+      options: ["Line", "Value", "Space", "Shape"],
+      correct: 2,
+      explanation: "Space is the area around, between, or inside objects in an artwork."
+    },
+    {
+      q: "Which of the following is an example of form?",
+      options: ["A flat triangle", "A pencil mark", "A cube", "A color name"],
+      correct: 2,
+      explanation: "A cube is a three-dimensional form with height, width, and depth."
+    },
+    {
+      q: "Why are the elements of art important?",
+      options: [
+        "They help artists create and express ideas",
+        "They make every artwork look the same",
+        "They are used only in drawing",
+        "They replace an artist's imagination"
+      ],
+      correct: 0,
+      explanation: "The elements of art help artists express ideas and feelings, and make artworks interesting and meaningful."
+    }
+  ];
+
+  var letters = ["A", "B", "C", "D"];
+  var form = document.getElementById("quizForm");
+  var submitBtn = document.getElementById("submitBtn");
+  var resetBtn = document.getElementById("resetBtn");
+  var resultsPanel = document.getElementById("resultsPanel");
+  var scoreBig = document.getElementById("scoreBig");
+  var statCorrect = document.getElementById("statCorrect");
+  var statWrong = document.getElementById("statWrong");
+  var resultsMessage = document.getElementById("resultsMessage");
+  var wrongList = document.getElementById("wrongList");
+  var retryBtn = document.getElementById("retryBtn");
+  var quizSection = document.getElementById("quizSection");
+
+  function buildQuiz() {
+    form.innerHTML = "";
+    quizData.forEach(function (item, qi) {
+      var block = document.createElement("div");
+      block.className = "question-block";
+      block.setAttribute("data-q", qi);
+
+      var heading = document.createElement("h4");
+      heading.textContent = (qi + 1) + ". " + item.q;
+      block.appendChild(heading);
+
+      var opts = document.createElement("div");
+      opts.className = "options";
+
+      item.options.forEach(function (label, oi) {
+        var labelEl = document.createElement("label");
+        labelEl.className = "option";
+
+        var input = document.createElement("input");
+        input.type = "radio";
+        input.name = "q" + qi;
+        input.value = oi;
+
+        var mark = document.createElement("span");
+        mark.className = "radio-mark";
+        var text = document.createElement("span");
+        text.textContent = letters[oi] + ". " + label;
+
+        labelEl.appendChild(input);
+        labelEl.appendChild(mark);
+        labelEl.appendChild(text);
+
+        input.addEventListener("change", function () {
+          var siblings = opts.querySelectorAll(".option");
+          siblings.forEach(function (s) { s.classList.remove("selected"); });
+          labelEl.classList.add("selected");
+        });
+
+        opts.appendChild(labelEl);
+      });
+
+      block.appendChild(opts);
+      form.appendChild(block);
+    });
+  }
+
+  function resetQuiz() {
+    buildQuiz();
+    resultsPanel.classList.remove("show");
+    quizSection.style.display = "block";
+    scoreBig.innerHTML = "0 <small>/ 10</small>";
+    statCorrect.textContent = "Correct: 0";
+    statWrong.textContent = "Incorrect: 0";
+    resultsMessage.textContent = "";
+    wrongList.innerHTML = "";
+  }
+
+  submitBtn.addEventListener("click", function () {
+    var correctCount = 0;
+    var wrongCount = 0;
+    var wrongItems = [];
+
+    quizData.forEach(function (item, qi) {
+      var selected = form.querySelector('input[name="q' + qi + '"]:checked');
+      var chosen = selected ? parseInt(selected.value, 10) : -1;
+
+      // Mark the answer options
+      var block = form.querySelector('.question-block[data-q="' + qi + '"]');
+      var options = block.querySelectorAll(".option");
+      options.forEach(function (opt, oi) {
+        opt.classList.remove("correct-answer", "wrong-answer");
+        if (oi === item.correct) opt.classList.add("correct-answer");
+        if (oi === chosen && chosen !== item.correct) opt.classList.add("wrong-answer");
+      });
+
+      if (chosen === item.correct) {
+        correctCount++;
+      } else {
+        wrongCount++;
+        wrongItems.push({
+          num: qi + 1,
+          question: item.q,
+          chosenText: chosen >= 0 ? letters[chosen] + ". " + item.options[chosen] : "No answer selected",
+          correctText: letters[item.correct] + ". " + item.options[item.correct],
+          explanation: item.explanation
+        });
+      }
+    });
+
+    var total = quizData.length;
+    scoreBig.innerHTML = correctCount + ' <small>/ ' + total + '</small>';
+    statCorrect.textContent = "Correct: " + correctCount;
+    statWrong.textContent = "Incorrect: " + wrongCount;
+
+    if (correctCount === total) {
+      resultsMessage.textContent = "Excellent work! You have shown a good understanding of the elements of art. Keep observing the world around you and discovering art in everyday life!";
+    } else if (correctCount >= 6) {
+      resultsMessage.textContent = "Good job! You know a lot about the elements of art. Review the questions you missed and keep exploring!";
+    } else {
+      resultsMessage.textContent = "Good try! Review the lesson and try the quiz again. Every great artist keeps learning!";
+    }
+
+    wrongList.innerHTML = "";
+    if (wrongItems.length > 0) {
+      wrongItems.forEach(function (w) {
+        var li = document.createElement("li");
+        li.innerHTML = "Question " + w.num + ": " + w.question +
+          "<span class='explain'>Your answer: " + w.chosenText +
+          "<br>Correct answer: " + w.correctText +
+          "<br>" + w.explanation + "</span>";
+        wrongList.appendChild(li);
+      });
+    }
+
+    resultsPanel.classList.add("show");
+    resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  resetBtn.addEventListener("click", resetQuiz);
+  retryBtn.addEventListener("click", function () {
+    resetQuiz();
+    quizSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  resetQuiz();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activities - Art Detective: Find the Element!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1b2a6b;
+    --pink: #ff5fa8;
+    --pink-soft: #ffd3e6;
+    --yellow: #ffe28a;
+    --yellow-soft: #fff1b8;
+    --purple: #8f5fe0;
+    --purple-soft: #e1d2fa;
+    --green: #3fc15a;
+    --green-soft: #d4f4c4;
+    --orange: #ff9a3c;
+    --orange-soft: #ffd9ae;
+    --blue: #4fa8e8;
+    --blue-soft: #cfe8fb;
+    --ink: #2b2b3a;
+    --font-body: "Fredoka", "Trebuchet MS", sans-serif;
+    --font-display: "Baloo 2", "Fredoka", "Trebuchet MS", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 10% 8%, #ffd9ef 0, transparent 38%),
+      radial-gradient(circle at 92% 12%, #ffc9e4 0, transparent 34%),
+      radial-gradient(circle at 20% 40%, #cfe3ff 0, transparent 40%),
+      radial-gradient(circle at 85% 48%, #e4d6ff 0, transparent 40%),
+      radial-gradient(circle at 15% 78%, #d6f1ff 0, transparent 38%),
+      radial-gradient(circle at 90% 85%, #ffe3f1 0, transparent 38%),
+      #f6eefc;
+    min-height: 100vh;
+  }
+
+  img { max-width: 100%; display: block; }
+
+  .poster {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 28px 22px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 26px;
+    background: #fff;
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    text-decoration: none;
+    border-radius: 999px;
+    border: 3px solid #fff;
+    box-shadow: 0 5px 0 rgba(143, 95, 224, 0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom: 18px;
+  }
+  .back-link:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(143, 95, 224, 0.2); }
+  .back-link:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(143, 95, 224, 0.2); }
+  .back-link:focus-visible { outline: 4px solid var(--navy); outline-offset: 3px; }
+
+  .page-title {
+    margin: 0 0 4px 6px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 3.8rem);
+    line-height: 1;
+    color: var(--navy);
+    -webkit-text-stroke: 8px #fff;
+    paint-order: stroke fill;
+    filter: drop-shadow(0 4px 0 rgba(143, 95, 224, 0.25));
+    transform: rotate(-2deg);
+    transform-origin: left center;
+  }
+  .page-title .accent { color: var(--green); }
+
+  .page-sub {
+    margin: 0 0 26px 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+    color: var(--purple);
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
+  }
+
+  .ribbon-wrap { text-align: center; margin: 26px 0 22px; }
+  .ribbon {
+    display: inline-block;
+    position: relative;
+    padding: 10px 56px 12px;
+    background: linear-gradient(#6fd97e, #3fc15a);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
+    letter-spacing: 0.01em;
+    text-shadow: 0 3px 0 rgba(20, 100, 40, 0.35);
+    border-radius: 14px;
+    box-shadow: 0 6px 0 #2a9a42;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    width: 40px;
+    height: 100%;
+    background: #6fd97e;
+    z-index: -1;
+    border-radius: 8px;
+  }
+  .ribbon::before { left: -26px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 28% 50%); }
+  .ribbon::after  { right: -26px; clip-path: polygon(0 0, 100% 0, 72% 50%, 100% 100%, 0 100%); }
+
+  .card {
+    background: #fff;
+    border-radius: 28px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+  }
+  .card h3 {
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+    color: var(--navy);
+  }
+  .card p, .card li {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .card p { margin: 0 0 10px; }
+  .card ul, .card ol { margin: 0 0 6px; padding-left: 24px; }
+  .card li { margin-bottom: 6px; }
+
+  /* Activity area */
+  .activity-panel {
+    background: #fff;
+    border-radius: 30px;
+    padding: 30px 32px 26px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+    margin-bottom: 22px;
+  }
+  .q-counter {
+    display: inline-block;
+    padding: 5px 20px;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: #1c6b2c;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    margin-bottom: 14px;
+  }
+  .q-text {
+    margin: 0 0 18px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 3vw, 1.6rem);
+    line-height: 1.25;
+    color: var(--navy);
+  }
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .choice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: #faf6ff;
+    border: 3px solid var(--purple-soft);
+    border-radius: 18px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+  }
+  .choice:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--purple); background: #f3ebff; }
+  .choice:focus-visible { outline: 4px solid var(--navy); outline-offset: 2px; }
+  .choice:disabled { cursor: default; }
+  .choice .letter {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--purple-soft);
+    color: var(--navy);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .choice.selected { border-color: var(--purple); background: #f3ebff; }
+  .choice.selected .letter { background: var(--purple); color: #fff; }
+  .choice.correct { border-color: var(--green); background: var(--green-soft); }
+  .choice.correct .letter { background: var(--green); color: #fff; }
+  .choice.wrong { border-color: #f0506e; background: #ffe0e6; }
+  .choice.wrong .letter { background: #f0506e; color: #fff; }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-weight: 500;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    line-height: 1.4;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.good { background: var(--green-soft); color: #1c6b2c; }
+  .feedback.bad  { background: #ffe0e6; color: #a01c36; }
+
+  .action-row {
+    margin-top: 18px;
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .action-row .spacer { flex: 1; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 32px;
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.3vw, 1.25rem);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(0,0,0,0.2); }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+  .btn:focus-visible { outline: 4px solid var(--navy); outline-offset: 3px; }
+  .btn-green  { background: #3fc15a; }
+  .btn-pink   { background: #ff6db3; }
+  .btn-purple { background: #9a68e6; }
+
+  /* Results screen */
+  .result-panel {
+    background: #fff;
+    border-radius: 30px;
+    padding: 34px 32px 30px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(143, 95, 224, 0.14);
+    text-align: center;
+    display: none;
+    margin-bottom: 22px;
+  }
+  .result-panel.show { display: block; }
+  .result-score {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 5rem);
+    line-height: 1;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+  .result-score small { font-size: 0.4em; color: var(--ink); font-weight: 600; }
+  .result-msg {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 2.9vw, 1.6rem);
+    color: var(--navy);
+    margin-bottom: 18px;
+    line-height: 1.3;
+  }
+  .completion-msg {
+    padding: 16px 22px;
+    border-radius: 18px;
+    background: var(--yellow-soft);
+    font-weight: 500;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    line-height: 1.45;
+    margin-bottom: 22px;
+  }
+  .result-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .ground {
+    height: 34px;
+    margin: 40px -22px 0;
+    background: linear-gradient(#b787f0, #8f5fe0);
+    border-radius: 60% 60% 0 0 / 100% 100% 0 0;
+  }
+
+  @media (max-width: 640px) {
+    .card, .activity-panel, .result-panel { padding: 20px 18px; }
+    .choices { grid-template-columns: 1fr; }
+    .ribbon { padding: 8px 34px 10px; }
+    .action-row { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .back-link, .btn, .choice { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="poster">
+
+  <a class="back-link" href="index.html">&larr; Back to Home</a>
+
+  <h1 class="page-title">Art Detective: <span class="accent">Find the Element!</span></h1>
+  <p class="page-sub">Read each clue and identify the element of art</p>
+
+  <div class="ribbon-wrap"><h2 class="ribbon" style="margin:0">Activities</h2></div>
+
+  <!-- Introduction & Objectives -->
+  <section class="card">
+    <h3>Welcome to Art Detective!</h3>
+    <p>In this online activity, you will look at short descriptions and identify the element of art being described. You can complete the activity directly on the website using your phone, tablet, or computer. No physical materials or recording are needed.</p>
+    <h4 style="margin:18px 0 8px;font-family:var(--font-display);font-weight:700;font-size:clamp(1.1rem,2.8vw,1.5rem);color:var(--purple);">Learning Objectives</h4>
+    <p>After completing this activity, learners are expected to:</p>
+    <ul>
+      <li>Identify the elements of art from simple descriptions.</li>
+      <li>Choose the correct element based on its characteristics.</li>
+      <li>Explain how elements of art appear in everyday objects.</li>
+    </ul>
+    <h4 style="margin:18px 0 8px;font-family:var(--font-display);font-weight:700;font-size:clamp(1.1rem,2.8vw,1.5rem);color:var(--purple);">How to Play</h4>
+    <ol>
+      <li>Read each clue on the screen.</li>
+      <li>Choose the element of art that matches the clue.</li>
+      <li>Click the "Check Answer" button to see if your answer is correct.</li>
+      <li>Continue until you finish all five questions and view your score.</li>
+    </ol>
+  </section>
+
+  <!-- Activity area -->
+  <div id="activityArea">
+    <div class="activity-panel" id="activityPanel">
+      <div class="q-counter" id="qCounter">Question 1 of 5</div>
+      <p class="q-text" id="qText"></p>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="action-row">
+        <button class="btn btn-purple" id="checkBtn" type="button">Check Answer</button>
+        <button class="btn btn-green" id="nextBtn" type="button" style="display:none;">Next Question &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result screen -->
+  <div class="result-panel" id="resultPanel">
+    <div class="result-score" id="resultScore">0 <small>/ 5</small></div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="completion-msg">
+      "Great job, Art Detective! You have completed the online activity. You practiced identifying the elements of art and learned how artists use them to create meaningful artworks. Keep looking, learning, and creating!"
+    </div>
+    <div class="result-btns">
+      <button class="btn btn-green" id="tryAgainBtn" type="button">Try Again</button>
+      <a class="btn btn-pink" href="index.html">Back to Home</a>
+    </div>
+  </div>
+
+  <div class="ground" aria-hidden="true"></div>
+</main>
+
+<script>
+  var activityQuestions = [
+    {
+      text: "I am a mark that can be straight, curved, thick, or thin. What am I?",
+      choices: ["Line", "Color", "Space"],
+      correct: 0,
+      feedback: "A line is a mark that connects two points and can be straight, curved, thick, or thin."
+    },
+    {
+      text: "I am a flat area such as a circle, square, or triangle. What am I?",
+      choices: ["Texture", "Shape", "Form"],
+      correct: 1,
+      feedback: "A shape is a flat, two-dimensional area with a boundary."
+    },
+    {
+      text: "I make objects look solid and three-dimensional, like a cube or ball. What am I?",
+      choices: ["Form", "Value", "Line"],
+      correct: 0,
+      feedback: "Form is three-dimensional, with height, width, and depth."
+    },
+    {
+      text: "I describe the roughness or smoothness of a surface. What am I?",
+      choices: ["Space", "Texture", "Color"],
+      correct: 1,
+      feedback: "Texture describes how a surface feels or looks like it would feel."
+    },
+    {
+      text: "I refer to the area around and between objects in an artwork. What am I?",
+      choices: ["Value", "Shape", "Space"],
+      correct: 2,
+      feedback: "Space is the area around, between, or inside objects in an artwork."
+    }
+  ];
+
+  var letters = ["A", "B", "C"];
+  var current = 0;
+  var score = 0;
+  var selected = -1;
+  var checked = false;
+
+  var qCounter = document.getElementById("qCounter");
+  var qText = document.getElementById("qText");
+  var choicesEl = document.getElementById("choices");
+  var feedback = document.getElementById("feedback");
+  var checkBtn = document.getElementById("checkBtn");
+  var nextBtn = document.getElementById("nextBtn");
+  var activityPanel = document.getElementById("activityPanel");
+  var resultPanel = document.getElementById("resultPanel");
+  var resultScore = document.getElementById("resultScore");
+  var resultMsg = document.getElementById("resultMsg");
+  var tryAgainBtn = document.getElementById("tryAgainBtn");
+
+  function renderQuestion() {
+    selected = -1;
+    checked = false;
+    var q = activityQuestions[current];
+    qCounter.textContent = "Question " + (current + 1) + " of " + activityQuestions.length;
+    qText.textContent = q.text;
+    choicesEl.innerHTML = "";
+    feedback.className = "feedback";
+    feedback.textContent = "";
+    checkBtn.style.display = "inline-block";
+    checkBtn.disabled = false;
+    nextBtn.style.display = "none";
+    nextBtn.textContent = (current === activityQuestions.length - 1) ? "See My Score \u2192" : "Next Question \u2192";
+
+    q.choices.forEach(function (label, i) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice";
+      btn.setAttribute("data-index", i);
+      btn.innerHTML = '<span class="letter">' + letters[i] + '</span><span>' + label + '</span>';
+      btn.addEventListener("click", function () {
+        if (checked) return;
+        selected = i;
+        // Remove selected state from ALL choices, then add it only to this one
+        choicesEl.querySelectorAll(".choice").forEach(function (c) {
+          c.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+      });
+      choicesEl.appendChild(btn);
+    });
+  }
+
+  checkBtn.addEventListener("click", function () {
+    if (checked) return;
+
+    if (selected === -1) {
+      feedback.className = "feedback bad show";
+      feedback.textContent = "Please choose an answer first.";
+      return;
+    }
+
+    checked = true;
+    var q = activityQuestions[current];
+    var buttons = choicesEl.querySelectorAll(".choice");
+
+    buttons.forEach(function (btn) {
+      btn.disabled = true;
+      // Clear the selected highlight before showing correct/wrong colors
+      btn.classList.remove("selected");
+      var i = parseInt(btn.getAttribute("data-index"), 10);
+      if (i === q.correct) btn.classList.add("correct");
+      if (i === selected && selected !== q.correct) btn.classList.add("wrong");
+    });
+
+    if (selected === q.correct) {
+      score++;
+      feedback.className = "feedback good show";
+      feedback.textContent = "Correct! " + q.feedback;
+    } else {
+      feedback.className = "feedback bad show";
+      feedback.textContent = "Not quite. The correct answer is " + letters[q.correct] + ". " + q.feedback;
+    }
+
+    checkBtn.style.display = "none";
+    nextBtn.style.display = "inline-block";
+  });
+
+  nextBtn.addEventListener("click", function () {
+    if (current < activityQuestions.length - 1) {
+      current++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+
+  function showResults() {
+    activityPanel.style.display = "none";
+    resultPanel.classList.add("show");
+    resultScore.innerHTML = score + ' <small>/ ' + activityQuestions.length + '</small>';
+
+    var msg;
+    if (score === 5) {
+      msg = "Excellent! You are an Art Detective!";
+    } else if (score >= 3) {
+      msg = "Great work! Keep exploring art!";
+    } else {
+      msg = "Good try! Review the lesson and try again.";
+    }
+    resultMsg.textContent = msg;
+  }
+
+  tryAgainBtn.addEventListener("click", function () {
+    current = 0;
+    score = 0;
+    resultPanel.classList.remove("show");
+    activityPanel.style.display = "block";
+    renderQuestion();
+  });
+
+  renderQuestion();
+</script>
+
+</body>
+</html>
